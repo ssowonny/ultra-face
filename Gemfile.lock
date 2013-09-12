@@ -1,10 +1,20 @@
+PATH
+  remote: .
+  specs:
+    ultra-face (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
     minitest (5.0.7)
+    rake (10.1.0)
+    rake-compiler (0.9.1)
+      rake
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   minitest
+  rake-compiler
+  ultra-face!

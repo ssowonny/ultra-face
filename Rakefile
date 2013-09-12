@@ -1,12 +1,16 @@
 require 'rubygems'
 require 'rake'
 require 'rake/testtask'
+require "rake/extensiontask"
 require File.expand_path('../lib/ultra_face/version', __FILE__)
 
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/*_test.rb'
 end
+
+spec = Gem::Specification.load('ultra-face.gemspec')
+Rake::ExtensionTask.new('ultra_face_detector', spec)
 
 namespace :test do
   Rake::TestTask.new(:lint) do |test|

@@ -13,8 +13,12 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://rubygems.org/gems/ultra_face'
   s.license     = 'MIT'
 
-  s.files         = `git ls-files`.split("\n")
+  s.files       = Dir.glob("ext/**/*.{c,rb}") +
+                  Dir.glob("lib/**/*.rb")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.extensions << "ext/ultra_face_detector/extconf.rb"
+  s.add_development_dependency "rake-compiler"
+
   s.require_paths = ['lib']
 end
