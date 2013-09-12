@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "ultra_face/version"
+require "ultra-face/version"
 
 Gem::Specification.new do |s|
   s.name        = 'ultra-face'
@@ -10,10 +10,10 @@ Gem::Specification.new do |s|
   s.description = "Detect Facial Features"
   s.authors     = ["Sungwon Lee"]
   s.email       = 'ssowonny@ultracaption.net'
-  s.homepage    = 'http://rubygems.org/gems/ultra_face'
+  s.homepage    = 'http://rubygems.org/gems/ultra-face'
   s.license     = 'MIT'
 
-  s.files       = Dir.glob("ext/**/*.{c,rb}") +
+  s.files       = Dir.glob("ext/**/*.{c,cpp,rb}") +
                   Dir.glob("lib/**/*.rb")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }

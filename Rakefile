@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'rake/testtask'
 require "rake/extensiontask"
-require File.expand_path('../lib/ultra_face/version', __FILE__)
+require File.expand_path('../lib/ultra-face/version', __FILE__)
 
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
