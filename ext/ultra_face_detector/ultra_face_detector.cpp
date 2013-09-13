@@ -1,5 +1,7 @@
 #include <ruby.h>
 #include <stdio.h>
+#include <cv.h>
+#include "libflandmark/flandmark_detector.h"
 
 VALUE hello_world(...) {
   printf("Hello World\n");
