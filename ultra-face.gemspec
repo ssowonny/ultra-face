@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://rubygems.org/gems/ultra-face'
   s.license     = 'MIT'
 
-  s.files       = Dir.glob("ext/**/*.{c,cpp,rb,a}") +
+  s.files       = Dir.glob("ext/**/*.{h,c,cpp,rb,a}") +
                   Dir.glob("lib/**/*.rb")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }

@@ -12,6 +12,8 @@ Dir.chdir(File.expand_path("libflandmark", File.dirname(__FILE__))) do
   end
 end
 $libs += format(LIBARG, 'flandmark_static')
+$libs += " #{`pkg-config --cflags --libs opencv`.strip}"
+
 idefault = ['/usr/local/include/opencv', "/usr/local/include"]
 ldefault = File.dirname(__FILE__)
 dir_config(extension_name, idefault, ldefault)
