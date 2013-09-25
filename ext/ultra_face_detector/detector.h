@@ -8,8 +8,9 @@ namespace Ultra {
 
     public:
 
-    typedef struct __FaceData {
-      CvRect bound;
+    typedef struct __FacialData {
+      CvSize imageSize;
+      CvRect faceBounds;
 
       CvPoint faceCenter;
       CvPoint canthusRL;
@@ -21,15 +22,15 @@ namespace Ultra {
       CvPoint nose;
 
       public:
-      bool operator==(const struct __FaceData& faceData);
-      bool operator!=(const struct __FaceData& faceData);
-    } FaceData;
-    static FaceData FaceDataNotFound;
+      bool operator==(const struct __FacialData& faceData);
+      bool operator!=(const struct __FacialData& faceData);
+    } FacialData;
+    static FacialData FacialDataNotFound;
 
     Detector();
     ~Detector();
 
-    FaceData detect(char* buffer, unsigned int size);
+    FacialData detect(char* buffer, unsigned int size);
 
     CvSeq* detectFaceRect(IplImage* image);
 

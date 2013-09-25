@@ -1,7 +1,7 @@
 #include "detector.h"
 
 namespace Ultra {
-  Detector::FaceData Detector::FaceDataNotFound;
+  Detector::FacialData Detector::FacialDataNotFound;
 
   Detector::Detector() {
     // Initialize data
@@ -17,8 +17,8 @@ namespace Ultra {
     cvReleaseMemStorage(&_storage);
   }
 
-  Detector::FaceData Detector::detect(char* buffer, unsigned int size) {
-    FaceData data;
+  Detector::FacialData Detector::detect(char* buffer, unsigned int size) {
+    FacialData data;
 
     CvMat mat = cvMat(1, size, CV_32FC2, static_cast<void *>(buffer));
     IplImage* image = cvDecodeImage(&mat, -1);
@@ -28,7 +28,7 @@ namespace Ultra {
 
     CvSeq* rects = detectFaceRect(gray);
     if( !rects ) {
-      return FaceDataNotFound;
+      return FacialDataNotFound;
     }
 
     // Pick the largest face
@@ -45,20 +45,21 @@ namespace Ultra {
     }
 
     if( !face ) {
-      return FaceDataNotFound;
+      return FacialDataNotFound;
     }
 
     // Detect Face data
-    int bound[4];
-    bound[0] = face->x;
-    bound[1] = face->y;
-    bound[2] = face->x + face->width;
-    bound[3] = face->y + face->height;
+    int bounds[4];
+    bounds[0] = face->x;
+    bounds[1] = face->y;
+    bounds[2] = face->x + face->width;
+    bounds[3] = face->y + face->height;
 
     double *landmarks = (double*)malloc(2 * _model->data.options.M * sizeof(double));
-    flandmark_detect(gray, bound, _model, landmarks);
+    flandmark_detect(gray, bounds, _model, landmarks);
 
-    data.bound = *face;
+    data.imageSize = cvSize(image->width, image->height);
+    data.faceBounds = *face;
     data.faceCenter   = cvPoint(landmarks[0], landmarks[1]);
     data.canthusRL    = cvPoint(landmarks[2], landmarks[3]);
     data.canthusLR    = cvPoint(landmarks[4], landmarks[5]);
@@ -84,11 +85,11 @@ namespace Ultra {
   // FACE DATA
   // ---------
 
-  bool Detector::FaceData::operator==(const struct __FaceData& faceData) {
+  bool Detector::FacialData::operator==(const struct __FacialData& faceData) {
     return memcmp(this, &faceData, sizeof(this)) == 0;
   }
 
-  bool Detector::FaceData::operator!=(const struct __FaceData& faceData) {
+  bool Detector::FacialData::operator!=(const struct __FacialData& faceData) {
     return !(*this==faceData);
   }
 
