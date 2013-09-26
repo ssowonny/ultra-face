@@ -1,5 +1,4 @@
 #include <ruby.h>
-#include <stdio.h>
 #include <highgui.h>
 #include <cv.h>
 #include "libflandmark/flandmark_detector.h"
@@ -7,8 +6,16 @@
 
 typedef VALUE (ruby_method)(...);
 
+Ultra::Detector* detector = NULL;
+
+VALUE setup(VALUE self, VALUE flandmarkPath, VALUE haarcascadePath ) {
+  // Initialize Detector
+  detector = new Ultra::Detector(RSTRING_PTR(flandmarkPath), RSTRING_PTR(haarcascadePath));
+
+  return Qnil;
+}
+
 VALUE detect_face_data(VALUE self, VALUE buffer) {
-  Ultra::Detector* detector = new Ultra::Detector();
   Ultra::Detector::FacialData data = detector->detect( RSTRING_PTR(buffer), RSTRING_LEN(buffer) );
 
   if( data == Ultra::Detector::FacialDataNotFound ) {
@@ -87,5 +94,9 @@ extern "C"
 void Init_ultra_face_detector(void) {
   VALUE ultra_module = rb_define_module("UltraFace");
   VALUE detector_module = rb_define_module_under(ultra_module, "Detector");
+  // Detect method
   rb_define_singleton_method(detector_module, "detect_face_data", (ruby_method*) &detect_face_data, 1);
+
+  // Setup method
+  rb_define_singleton_method(detector_module, "setup", (ruby_method*) &setup, 2);
 }

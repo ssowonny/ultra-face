@@ -14,7 +14,8 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.files       = Dir.glob("ext/**/*.{h,c,cpp,rb,a}") +
-                  Dir.glob("lib/**/*.rb")
+                  Dir.glob("lib/**/*.rb") +
+                  Dir.glob("vendor/*")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.extensions << "ext/ultra_face_detector/extconf.rb"

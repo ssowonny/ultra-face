@@ -27,7 +27,7 @@ namespace Ultra {
     } FacialData;
     static FacialData FacialDataNotFound;
 
-    Detector();
+    Detector(const char* flandmarkDataPath, const char* faceDataPath);
     ~Detector();
 
     FacialData detect(char* buffer, unsigned int size);

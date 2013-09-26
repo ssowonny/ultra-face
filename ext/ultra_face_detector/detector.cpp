@@ -3,12 +3,11 @@
 namespace Ultra {
   Detector::FacialData Detector::FacialDataNotFound;
 
-  Detector::Detector() {
+  Detector::Detector(const char* flandmarkDataPath, const char* faceDataPath) {
     // Initialize data
     _storage = cvCreateMemStorage(0);
-    _model = flandmark_init("./ext/ultra_face_detector/flandmark_model.dat");
-    char faceCascadeFilename[] = "./ext/ultra_face_detector/haarcascade_frontalface_alt.xml";
-    _faceCascade = (CvHaarClassifierCascade*)cvLoad(faceCascadeFilename, 0, 0, 0);
+    _model = flandmark_init(flandmarkDataPath);
+    _faceCascade = (CvHaarClassifierCascade*)cvLoad(faceDataPath, 0, 0, 0);
   }
 
   Detector::~Detector() {
