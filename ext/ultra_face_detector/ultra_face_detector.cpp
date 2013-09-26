@@ -16,6 +16,10 @@ VALUE setup(VALUE self, VALUE flandmarkPath, VALUE haarcascadePath ) {
 }
 
 VALUE detect_face_data(VALUE self, VALUE buffer) {
+  if( !RTEST(buffer) ) {
+    return Qnil;
+  }
+
   Ultra::Detector::FacialData data = detector->detect( RSTRING_PTR(buffer), RSTRING_LEN(buffer) );
 
   if( data == Ultra::Detector::FacialDataNotFound ) {

@@ -12,4 +12,8 @@ class UltraFace::DetectorTest < MiniTest::Test
     assert result, 'Face should be detected'
     assert_equal 250, result[:image_size][:width]
   end
+
+  def test_should_support_nil_data
+    refute UltraFace::Detector.detect_face_data(nil)
+  end
 end
