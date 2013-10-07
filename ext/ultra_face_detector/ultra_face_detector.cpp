@@ -20,7 +20,12 @@ VALUE detect_face_data(VALUE self, VALUE buffer) {
     return Qnil;
   }
 
-  Ultra::Detector::FacialData data = detector->detect( RSTRING_PTR(buffer), RSTRING_LEN(buffer) );
+  Ultra::Detector::FacialData data;
+  try {
+    data = detector->detect( RSTRING_PTR(buffer), RSTRING_LEN(buffer) );
+  } catch(...) {
+    return Qnil;
+  }
 
   if( data == Ultra::Detector::FacialDataNotFound ) {
     return Qnil;
