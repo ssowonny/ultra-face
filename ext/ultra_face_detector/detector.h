@@ -3,6 +3,8 @@
 #include "libflandmark/flandmark_detector.h"
 #include <highgui.h>
 
+#define CvRectZero cvRect(0,0,0,0)
+
 namespace Ultra {
   class Detector {
 
@@ -30,8 +32,8 @@ namespace Ultra {
     Detector(const char* flandmarkDataPath, const char* faceDataPath);
     ~Detector();
 
-    FacialData detect(char* buffer, unsigned int size);
-
+    FacialData detectFacialData(char* buffer, unsigned int size);
+    CvRect detectFaceRect(char* buffer, unsigned int size, CvSize* imageSizeRef = NULL);
     CvSeq* detectFaceRect(IplImage* image);
 
     protected:

@@ -15,14 +15,50 @@ VALUE setup(VALUE self, VALUE flandmarkPath, VALUE haarcascadePath ) {
   return Qnil;
 }
 
-VALUE detect_face_data(VALUE self, VALUE buffer) {
+VALUE detect_face_rect(VALUE self, VALUE buffer) {
+  if( !RTEST(buffer) ) {
+    return Qnil;
+  }
+
+  try {
+    CvSize size;
+    CvRect rect = detector->detectFaceRect(RSTRING_PTR(buffer), RSTRING_LEN(buffer), &size); 
+    if(rect.x == 0 && rect.y == 0 && rect.width == 0 && rect.height == 0) {
+      return Qnil;
+    }
+
+    // Image Size
+    VALUE imageSize = rb_hash_new();
+    rb_hash_aset(imageSize, ID2SYM(rb_intern("width")), INT2NUM(size.width));
+    rb_hash_aset(imageSize, ID2SYM(rb_intern("height")), INT2NUM(size.height));
+
+    // Face Bounds
+    VALUE faceBounds = rb_hash_new();
+    rb_hash_aset(faceBounds, ID2SYM(rb_intern("x")), INT2NUM(rect.x));
+    rb_hash_aset(faceBounds, ID2SYM(rb_intern("y")), INT2NUM(rect.y));
+    rb_hash_aset(faceBounds, ID2SYM(rb_intern("width")), INT2NUM(rect.width));
+    rb_hash_aset(faceBounds, ID2SYM(rb_intern("height")), INT2NUM(rect.height));
+
+    // Result
+    VALUE result = rb_hash_new();
+    rb_hash_aset(result, ID2SYM(rb_intern("image_size")), imageSize);
+    rb_hash_aset(result, ID2SYM(rb_intern("face_bounds")), faceBounds);
+
+    return result;
+
+  } catch(...) {
+  }
+  return Qnil;
+}
+
+VALUE detect_facial_data(VALUE self, VALUE buffer) {
   if( !RTEST(buffer) ) {
     return Qnil;
   }
 
   Ultra::Detector::FacialData data;
   try {
-    data = detector->detect( RSTRING_PTR(buffer), RSTRING_LEN(buffer) );
+    data = detector->detectFacialData( RSTRING_PTR(buffer), RSTRING_LEN(buffer) );
   } catch(...) {
     return Qnil;
   }
@@ -103,8 +139,10 @@ extern "C"
 void Init_ultra_face_detector(void) {
   VALUE ultra_module = rb_define_module("UltraFace");
   VALUE detector_module = rb_define_module_under(ultra_module, "Detector");
+
   // Detect method
-  rb_define_singleton_method(detector_module, "detect_face_data", (ruby_method*) &detect_face_data, 1);
+  rb_define_singleton_method(detector_module, "detect_facial_data", (ruby_method*) &detect_facial_data, 1);
+  rb_define_singleton_method(detector_module, "detect_face_rect", (ruby_method*) &detect_face_rect, 1);
 
   // Setup method
   rb_define_singleton_method(detector_module, "setup", (ruby_method*) &setup, 2);

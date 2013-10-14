@@ -17,7 +17,7 @@ namespace Ultra {
     flandmark_free(_model);
   }
 
-  Detector::FacialData Detector::detect(char* buffer, unsigned int size) {
+  Detector::FacialData Detector::detectFacialData(char* buffer, unsigned int size) {
     // Clear memory storage
     cvClearMemStorage( _storage );
 
@@ -95,6 +95,64 @@ namespace Ultra {
       return FacialDataNotFound;
     }
     return data;
+  }
+
+  CvRect Detector::detectFaceRect(char* buffer, unsigned int size, CvSize* imageSizeRef) {
+
+    // Clear memory storage
+    cvClearMemStorage( _storage );
+    IplImage* image = NULL, * gray = NULL;
+    CvRect rect = CvRectZero;
+
+    do {
+      try {
+        CvMat mat = cvMat(1, size, CV_32FC2, static_cast<void *>(buffer));
+        image = cvDecodeImage(&mat, -1);
+        if( !image ) {
+          break;
+        }
+
+        // Setup the image size
+        if( imageSizeRef ) {
+          imageSizeRef->width = image->width;
+          imageSizeRef->height = image->height;
+        }
+
+        gray = cvCreateImage(cvSize(image->width, image->height), IPL_DEPTH_8U, 1);
+        cvCvtColor(image, gray, CV_BGR2GRAY);
+
+        CvSeq* rects = detectFaceRect(gray);
+        if( !rects ) {
+          break;
+        }
+
+        // Pick the largest face
+        int maxSize = 0;
+        int facesCount = rects->total;
+        for( int i = 0; i < facesCount; ++i ) {
+          CvRect* r = (CvRect*)cvGetSeqElem(rects, i);
+          int size = r->width * r->height;
+          if( maxSize < size ) {
+            maxSize = size;
+            rect = *r;
+          }
+        }
+
+      } catch(...) {
+        rect = CvRectZero;
+      }
+    } while(false);
+
+    // Release memory
+    if(image) {
+      cvReleaseImage(&image);
+    }
+
+    if(gray) {
+      cvReleaseImage(&gray);
+    }
+
+    return rect;
   }
 
   CvSeq* Detector::detectFaceRect(IplImage* image) {

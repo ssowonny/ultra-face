@@ -8,7 +8,7 @@ module UltraFace
       data = file.read
       file.close
 
-      detect_face_data data
+      detect_facial_data data
     end
   end
 end
